@@ -119,7 +119,17 @@ public class CrossingJDBCTrue {
             System.out.println("--------------------------------------");
         }
         
-        //(7)
+        //(7) Actualizar el lugar del usuario
+        try{    
+            if(crossingDao.updateLugarUser("kelvinAlpha","home")==true){
+                System.out.println("Actualizacion correcta de lugar");
+                System.out.println("----------------------------------");
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("--------------------------------------");
+        }
          
         
         //(8)
@@ -138,7 +148,12 @@ public class CrossingJDBCTrue {
           
         
         //(13)
+        
+        
+        //(14)
           
+        
+        
         //Desconectar de la base de datos
         try{    
             System.out.println("Desconectado de la base datos...");

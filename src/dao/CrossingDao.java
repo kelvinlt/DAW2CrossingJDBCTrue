@@ -194,5 +194,22 @@ public class CrossingDao {
         return correcto;
     }
     
+    public boolean updateLugarUser(String user,String lugar) throws crossingException,SQLException{
+        boolean correcto=false;
+        if(checkUser(user)==true){
+            String update = "update user set place=? where username=?";
+            PreparedStatement ps = conexion.prepareStatement(update);
+            ps.setString(1, lugar);
+            ps.setString(2, user);
+            ps.executeUpdate();
+            ps.close();
+            correcto=true;
+        }else{
+            throw new crossingException("No existe un usuario con este username("+user+")");
+        }
+        
+        return correcto;
+    }
+    
     
 }
