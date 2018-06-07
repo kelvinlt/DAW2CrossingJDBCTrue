@@ -211,5 +211,94 @@ public class CrossingDao {
         return correcto;
     }
     
+    public boolean updateLugarCharacter(String character,String lugar) throws crossingException,SQLException{
+        boolean correcto=false;
+        if(checkCharacter(character)==true){
+            String update = "update stucomcrossing.character set place=? where name=?";
+            PreparedStatement ps = conexion.prepareStatement(update);
+            ps.setString(1, lugar);
+            ps.setString(2, character);
+            ps.executeUpdate();
+            ps.close();
+            correcto=true;
+        }else{
+            throw new crossingException("No existe un personaje con este nombre("+character+")");
+        }
+
+        return correcto;
+    }
     
+    public boolean updatePrecioItem(Item item) throws crossingException,SQLException{
+        boolean correcto=false;
+        if(checkItem(item.getName())==true){
+            String update = "update item set price=? where name=?";
+            PreparedStatement ps = conexion.prepareStatement(update);
+            ps.setDouble(1, item.getSaleprice());
+            ps.setString(2, item.getName());
+            ps.executeUpdate();
+            ps.close();    
+            correcto=true;
+        }else{
+            throw new crossingException("No existe el objeto con este nombre("+item.getName()+")");
+        }        
+        return correcto;
+    }
+    
+    public ArrayList<Character> getAllCharactersFromUserPlace(User user) throws crossingException, SQLException {
+        ArrayList<Character> charactesLugarUsuario = new ArrayList<>();
+        boolean correcto = false;
+
+        String select = "select * from stucomcrossing.character where place = '" + user.getPlace() + "';";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(select);
+
+        while (rs.next()) {
+            Character c = new Character();
+            c.setName(rs.getString("name"));
+            c.setPreference(rs.getString("preference"));
+            c.setPlace(rs.getString("place"));
+            c.setStudy(rs.getString("study"));
+            charactesLugarUsuario.add(c);
+        }
+        return charactesLugarUsuario;
+    }
+    
+    public boolean compraItem(User u, Item i) throws crossingException, SQLException{
+        boolean correcto = false;
+            if(checkCharacter(u.getUsername())==true){
+                if(checkItem(i.getName())==true){
+                    if(checkInventoryUserItem(u, i)){
+                    
+                        
+                    }
+                    else{
+                    
+                        
+                    }
+                    
+                }else{
+                    throw new crossingException("No existe el objeto con este nombre("+i.getName()+")");
+                }    
+            }else{
+                throw new crossingException("No existe el usuario con este username("+u.getUsername()+")");
+            }
+            
+        return correcto;
+    }
+    
+    public boolean checkInventoryUserItem(User u,Item i) throws crossingException,SQLException{
+        boolean correcto=false;
+        String select = "select * from inventory where user='"+u.getUsername()+"' and item='"+i.getName()+"'  ;";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(select);
+        
+        if (rs.next()) {
+            correcto = true;
+        }
+        rs.close();
+        st.close();
+        
+        return correcto;
+    }
+  
 }

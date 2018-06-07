@@ -1,5 +1,6 @@
 package crossingjdbctrue;
 import dao.CrossingDao;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import obj.User;
@@ -9,7 +10,8 @@ import obj.Item;
 public class CrossingJDBCTrue {
     public static void main(String[] args) {
         CrossingDao crossingDao = new CrossingDao();
-        List<User> users = new ArrayList<>();
+        ArrayList<User> users = new ArrayList<>();
+        ArrayList<Character> charactesLugarUsuario = new ArrayList<>();
      
         //Conexion con base de datos
         try{
@@ -89,18 +91,7 @@ public class CrossingJDBCTrue {
             }else{
                 System.out.println("ERROR: El username o password estan mal");
                 System.out.println("--------------------------------------");
-            };
-            
-            /* ejemplo de error
-            User errorValidacion = new User("error", "error");
-            if (crossingDao.validacionUser(errorValidacion) == true) {
-            System.out.println("Se ha validado correctamente el usuario(" + errorValidacion.getUsername() + ") ");
-            System.out.println("--------------------------------------");
-            } else {
-            System.out.println("ERROR: El username o password estan mal");
-            System.out.println("--------------------------------------");
-            };*/
-            
+            };         
             
         }catch(Exception e){
             System.out.println(e.getMessage());
@@ -122,7 +113,7 @@ public class CrossingJDBCTrue {
         //(7) Actualizar el lugar del usuario
         try{    
             if(crossingDao.updateLugarUser("kelvinAlpha","home")==true){
-                System.out.println("Actualizacion correcta de lugar");
+                System.out.println("Actualizacion correcta de lugar de usuario");
                 System.out.println("----------------------------------");
             }
             
@@ -132,26 +123,85 @@ public class CrossingJDBCTrue {
         }
          
         
-        //(8)
-          
-        
-        //(9)
-         
-        
-        //(10)
+        //(8) Actualizar el lugar de un personaje
+        try{    
+            if(crossingDao.updateLugarCharacter("reseti","tunel")==true){
+                System.out.println("Actualizacion correcta de lugar de personaje");
+                System.out.println("----------------------------------");
+            }
             
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("--------------------------------------");
+        } 
         
-        //(11)
-           
+        //(9) Actualizacion de precio de un item
+        try{   
+            Item newPico = new Item("pico", 6.00);
+            
+            if(crossingDao.updatePrecioItem(newPico)==true){
+                System.out.println("Actualizacion correcta de precio de item");
+                System.out.println("----------------------------------");
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("--------------------------------------");
+        }         
         
-        //(12)
-          
         
-        //(13)
+        //(10)Obtener datos de personajes que estan en el mismo lugar que un usuario
+        try{
+            User kelvinAlpha = new User("kelvinAlpha", "123", 100, 0, "tunel", 0);
+            charactesLugarUsuario=crossingDao.getAllCharactersFromUserPlace(kelvinAlpha);
+            
+            for (int i = 0; i < charactesLugarUsuario.size(); i++) {
+			System.out.println(charactesLugarUsuario.get(i));
+            }
+            System.out.println("--------------------------------------");
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("--------------------------------------");
+        }  
         
+        //(11)Compra de un objeto
+        try{
+            
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("--------------------------------------");
+        }     
+        
+        //(12)Venta de un objeto
+        try{
+            
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("--------------------------------------");
+        }    
+        
+        /*        
+        //(13)Dar un objeto a un personaje
+        try{
+        
+        
+        }catch(Exception e){
+        System.out.println(e.getMessage());
+        System.out.println("--------------------------------------");
+        }  
+        */
         
         //(14)
-          
+        try{
+            
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("--------------------------------------");
+        }   
         
         
         //Desconectar de la base de datos
