@@ -89,8 +89,7 @@ public class CrossingDao {
             rs.close();
             st.close();
             
-        }
-        
+        } 
         return userReturnee;
     }
     
@@ -158,6 +157,29 @@ public class CrossingDao {
         st.close();
         
         return check;
+    }
+    
+        public Item getItemFromName(String name) throws crossingException, SQLException{
+        Item itemReturnee = new Item();
+        
+        if(checkItem(name)== false){
+            throw new crossingException("No existe ningun item con este nombre("+name+")"); 
+        }else{
+            String select = "select * from item where name='" + name + "'";
+            Statement st = conexion.createStatement();
+            ResultSet rs = st.executeQuery(select);
+            if (rs.next()) {
+                itemReturnee.setName(rs.getString("name"));
+                itemReturnee.setPrice(rs.getDouble("price"));
+                itemReturnee.setSaleprice(rs.getDouble("saleprice"));
+                itemReturnee.setType(rs.getString("type"));   
+                itemReturnee.setStyle(rs.getString("style"));   
+            }
+            rs.close();
+            st.close();
+            
+        } 
+        return itemReturnee;
     }
     
     public boolean validacionUser(User u) throws SQLException{
@@ -233,7 +255,7 @@ public class CrossingDao {
         if(checkItem(item.getName())==true){
             String update = "update item set price=? where name=?";
             PreparedStatement ps = conexion.prepareStatement(update);
-            ps.setDouble(1, item.getSaleprice());
+            ps.setDouble(1, item.getPrice());
             ps.setString(2, item.getName());
             ps.executeUpdate();
             ps.close();    
@@ -265,17 +287,43 @@ public class CrossingDao {
     
     public boolean compraItem(User u, Item i) throws crossingException, SQLException{
         boolean correcto = false;
-            if(checkCharacter(u.getUsername())==true){
+        User auxUser = new User();
+        Item auxItem = new Item();
+        int auxQuantity = 0;
+            if(checkUser(u.getUsername())==true){
+                auxUser=getUserFromUsername(u.getUsername());
+                
                 if(checkItem(i.getName())==true){
-                    if(checkInventoryUserItem(u, i)){
+                    auxItem=getItemFromName(i.getName());
                     
+                    if(auxUser.getStucoins()>auxItem.getPrice()){
+                        restaMonedasCompra(auxUser,auxItem.getPrice());
                         
+                        if(checkInventoryUserItem(auxUser, auxItem)==true){
+                        auxQuantity = getQuantitiesUserItem(auxUser,auxItem)+1;
+                        
+                        String update = "update stucomcrossing.inventory set quantity=?";
+                        PreparedStatement ps = conexion.prepareStatement(update);
+                        ps.setInt(1, auxQuantity);
+                        ps.executeUpdate();
+                        ps.close();
                     }
                     else{
-                    
-                        
+                        restaMonedasCompra(auxUser,auxItem.getPrice());
+                            
+                        String insert = "insert into stucomcrossing.inventory values(?,?,?)";
+                        PreparedStatement ps = conexion.prepareStatement(insert);
+                        ps.setString(1, auxUser.getUsername());
+                        ps.setString(2, auxItem.getName());
+                        ps.setInt(3, 1);
+                        ps.executeUpdate();
+                        ps.close();
                     }
                     
+                    }else{
+                        throw new crossingException("No el usuario no tiene suficientes stucoins");
+                    }
+  
                 }else{
                     throw new crossingException("No existe el objeto con este nombre("+i.getName()+")");
                 }    
@@ -299,6 +347,41 @@ public class CrossingDao {
         st.close();
         
         return correcto;
+    }
+    
+    public int getQuantitiesUserItem(User u,Item i) throws crossingException,SQLException{
+        Item auxItem = new Item();
+        int quantity = 0;
+        
+        String select = "select * from inventory where user='" + u.getUsername() + "' and item='" + i.getName() + "' ";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(select);
+        
+        if (rs.next()) {
+                quantity= rs.getInt("quantity");
+        }else{
+            throw new crossingException("No se ha encontrado objeto en inventario");
+        }
+        
+        
+        return quantity;
+    }
+    
+    public boolean restaMonedasCompra(User u,double precio) throws crossingException,SQLException{
+        boolean correcion = false;
+        int auxStucoins = u.getStucoins();
+        int auxPrecio =(int) Math.ceil(precio);
+        
+        int finStucoins = auxStucoins - auxPrecio;
+        
+        String update = "update user set stucoins=?";
+        PreparedStatement ps = conexion.prepareStatement(update);
+        ps.setInt(1, finStucoins);
+        ps.executeUpdate();
+        ps.close();
+        
+        
+        return correcion;
     }
   
 }

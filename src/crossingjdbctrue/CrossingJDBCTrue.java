@@ -15,6 +15,7 @@ public class CrossingJDBCTrue {
      
         //Conexion con base de datos
         try{
+            System.out.println("--------------------------------------");
             System.out.println("Conectado con la base datos...");
             System.out.println("----------------------------------");
             crossingDao.conectar();
@@ -25,6 +26,7 @@ public class CrossingJDBCTrue {
         
         //(1)Creacion de usuario y insercion con check de si existe en DB
         try{
+            System.out.println("(1)Creacion de usuario y insercion con check de si existe en DB");
             User kelvin= new User("kelvin", "123", 0, 0, "barcelona", 0);
             if(crossingDao.insertarUser(kelvin)==true){
                 System.out.println("Se ha insertado el usuario("+kelvin.getUsername()+")");
@@ -40,6 +42,7 @@ public class CrossingJDBCTrue {
         
         //(2)Obtener un usuario a partir de un nombre de usuario
         try{    
+            System.out.println("(2)Obtener un usuario a partir de un nombre de usuario");
             User test2 = crossingDao.getUserFromUsername("kelvin");
                 System.out.println("Se ha encontrado al usuario("+test2.getUsername()+")"+test2);
                 System.out.println("----------------------------------");
@@ -55,6 +58,7 @@ public class CrossingJDBCTrue {
         
         //(3)Creacion de character y insercion con check de si existe en DB
         try{
+            System.out.println("(3)Creacion de character y insercion con check de si existe en DB");
             Character reseti = new Character("reseti", "daw", "tunel", "pico");
             if(crossingDao.insertarCharacter(reseti)==true){
                 System.out.println("Se ha insertado el personaje("+reseti.getName()+")");
@@ -70,6 +74,7 @@ public class CrossingJDBCTrue {
         
         //(4)Creacion de item y insercion con check e si existe en DB
         try{
+            System.out.println("(4)Creacion de item y insercion con check e si existe en DB");
             Item pico = new Item("pico", 5.00, 1.00, "herramienta", "programacion");
             crossingDao.insertarItem(pico);
             if(crossingDao.checkItem("pico")==true){
@@ -84,6 +89,7 @@ public class CrossingJDBCTrue {
         
         //(5)Validacion de usuario
         try{
+            System.out.println("(5)Validacion de usuario");
             User validacion = new User("kelvin", "123");
             if(crossingDao.validacionUser(validacion)==true){
                 System.out.println("Se ha validado correctamente el usuario("+validacion.getUsername()+") ");
@@ -99,7 +105,8 @@ public class CrossingJDBCTrue {
         }  
         
         //(6) Actualizacion de datos de usuario
-        try{    
+        try{  
+            System.out.println("(6) Actualizacion de datos de usuario");
             if(crossingDao.updateUsername("kelvin","kelvinAlpha")==true){
                 System.out.println("Actualizacion correcta de datos");
                 System.out.println("----------------------------------");
@@ -111,7 +118,8 @@ public class CrossingJDBCTrue {
         }
         
         //(7) Actualizar el lugar del usuario
-        try{    
+        try{ 
+            System.out.println("(7) Actualizar el lugar del usuario");
             if(crossingDao.updateLugarUser("kelvinAlpha","home")==true){
                 System.out.println("Actualizacion correcta de lugar de usuario");
                 System.out.println("----------------------------------");
@@ -124,7 +132,8 @@ public class CrossingJDBCTrue {
          
         
         //(8) Actualizar el lugar de un personaje
-        try{    
+        try{   
+            System.out.println("(8) Actualizar el lugar de un personaje");
             if(crossingDao.updateLugarCharacter("reseti","tunel")==true){
                 System.out.println("Actualizacion correcta de lugar de personaje");
                 System.out.println("----------------------------------");
@@ -136,7 +145,8 @@ public class CrossingJDBCTrue {
         } 
         
         //(9) Actualizacion de precio de un item
-        try{   
+        try{  
+            System.out.println("(9) Actualizacion de precio de un item");
             Item newPico = new Item("pico", 6.00);
             
             if(crossingDao.updatePrecioItem(newPico)==true){
@@ -152,9 +162,11 @@ public class CrossingJDBCTrue {
         
         //(10)Obtener datos de personajes que estan en el mismo lugar que un usuario
         try{
+            System.out.println("(10)Obtener datos de personajes que estan en el mismo lugar que un usuario");
             User kelvinAlpha = new User("kelvinAlpha", "123", 100, 0, "tunel", 0);
             charactesLugarUsuario=crossingDao.getAllCharactersFromUserPlace(kelvinAlpha);
             
+            System.out.println("Se han obtenido todos los datos de personajes que estan en el mismo lugar que el usuario:");
             for (int i = 0; i < charactesLugarUsuario.size(); i++) {
 			System.out.println(charactesLugarUsuario.get(i));
             }
@@ -167,7 +179,12 @@ public class CrossingJDBCTrue {
         
         //(11)Compra de un objeto
         try{
-            
+            System.out.println("(11)Compra de un objeto");
+            User kelvinAlpha= new User("kelvinAlpha", "123");
+            Item pico = new Item("pico", 6.00);
+            crossingDao.compraItem(kelvinAlpha, pico);
+            System.out.println("Se ha hecho la compra del pico correctamente");
+            System.out.println("--------------------------------------");
             
         }catch(Exception e){
             System.out.println(e.getMessage());
@@ -183,7 +200,7 @@ public class CrossingJDBCTrue {
             System.out.println("--------------------------------------");
         }    
         
-        /*        
+              
         //(13)Dar un objeto a un personaje
         try{
         
@@ -192,7 +209,7 @@ public class CrossingJDBCTrue {
         System.out.println(e.getMessage());
         System.out.println("--------------------------------------");
         }  
-        */
+        
         
         //(14)
         try{
@@ -208,6 +225,7 @@ public class CrossingJDBCTrue {
         try{    
             System.out.println("Desconectado de la base datos...");
             crossingDao.desconectar();
+            System.out.println("--------------------------------------");
             
         }catch(Exception e){
             System.out.println(e.getMessage());
